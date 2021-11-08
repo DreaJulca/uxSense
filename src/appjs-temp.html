@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>uxSense</title>
+    <!--dragging-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+        crossorigin="anonymous">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- D3 -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-selection-multi.v1.min.js"></script>
+    <!-- fisheye -->
+    <script src="fisheye.js"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- lodash -->
+    <script src="lodash/lodash.min.js"></script>
+    <!-- slider -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.0.4/wNumb.min.js'></script>
+    <link rel="stylesheet" type="text/css" href="nouislider.css" />
+    <link rel="stylesheet" href="multirange.css">
+
+    <!-- transcript -->
+    <!--link href="https://vjs.zencdn.net/5.6.0/video-js.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://vjs.zencdn.net/5.6.0/video.js"></script-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.10.3/video-js.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.10.3/video.min.js"></script>
+    <script src="https://unpkg.com/@videojs/http-streaming@1.13.2/dist/videojs-http-streaming.js"></script>
+  
+    <script src="videojs-transcript.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $( function() {
+          $( "#sortable" ).sortable({
+            handle: ".collapsible-header",
+            revert: true
+          });
+          $( "#draggable" ).draggable({
+            connectToSortable: "#sortable",
+            helper: "clone",
+            handle: ".collapsible-header",
+            revert: "invalid"
+          });
+          $( "ul, li" ).disableSelection();
+        } );
+        </script>        
+
+    <!--our stylesheet; keep at bottom of head-->
+    <link rel="stylesheet" type="text/css" href="front.css" media="screen">
+
+</head>
+
+<body>
+    <!-- Set video path; affects all other features-->
+    <script>
+        var uxSenseVideoPath = "TableauUser";
+    </script>
+    <!-- Check if firefox; otherwise assume chrome. Also rescale to 1 -->
+    <script>
+        window.isFirefox = typeof InstallTrigger !== 'undefined';
+    </script>
+    <!-- set widths and heights and margins-->
+    <script src="timelinesizevars.js"></script>
+    <!-- Add interaction event tracking-->
+    <script src="interactiontracking.js"></script>
+    <div class="grid-container">
+        <div class="left">
+            <div class="video-grid">
+                <div class="video-container">
+                        <video id="video" class="video-js vjs-default-skin" controls>
+                        <!--source src="TableauUser.mp4" type="video/mp4">
+                        <source src="TableauUser.ogg" type="video/ogg">
+                        <track kind="captions" src="captions/TableauUser_captions.vtt" srclang="en" label="English" default-->
+                    </video>
+                    <div id="transcript"></div>
+                </div>
+                <script>
+                    $.ajaxSetup({
+                        timeout: 15000 //allow up to fifteen seconds for the video to load, assuming video.js depends on jquery
+                    });
+
+                    /*
+                    var mp4src = document.createElement("source");
+                        mp4src.src = uxSenseVideoPath + ".mp4"
+                        mp4src.type = "video/mp4"
+
+                    var oggsrc = document.createElement("source");
+                        oggsrc.src = uxSenseVideoPath + ".ogg"
+                        oggsrc.type = "video/ogg"
+                    */
+                    var hlssrc = document.createElement("source");
+                        hlssrc.src = "m3u8s/" + uxSenseVideoPath + ".m3u8"
+                        hlssrc.type = "application/x-mpegURL"
+
+                    var captrack = document.createElement("track");
+                        captrack.kind = "captions";
+                        captrack.src = "captions/" + uxSenseVideoPath + "_captions.vtt"
+                        captrack.srclang = "en"
+                        captrack.label = "English"
+                        //captrack.default = ''
+
+                        $(captrack).attr('default','');
+
+                    document.getElementById("video").appendChild(hlssrc) 
+                    //document.getElementById("video").appendChild(mp4src) 
+                    //document.getElementById("video").appendChild(oggsrc) 
+                    document.getElementById("video").appendChild(captrack) 
+
+                    var video = videojs('video',{controlBar: {fullscreenToggle: false}}).ready(function () {
+        
+                        // fire up the plugin
+                        var options = {};
+                        var transcript = this.transcript(options);
+                        // var transcript = this.transcript();
+        
+                        // attach the widget to the page
+                        //var transcriptContainer = document.querySelector('#transcript');
+                        var transcriptContainer = document.getElementById('transcript');
+                        transcriptContainer.appendChild(transcript.el());
+                    });
+    
+                </script>
+
+            </div>
+        </div>
+        <div class="right">
+            <div class="tags">
+                <div class="tags-table">
+                    <div class="responsive-table table-status-sheet">
+                        <table id="annotation-table" class="highlight bordered">
+                            <thead>
+                                <tr>
+                                    <th class="center" style="width: 20%;">Timestamp</th>
+                                    <th class="center" style="width: 80%;">Annotation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="premierefocus" style="text-align: center;"></div>                    
+
+    <div class="timelines">
+        <div class="timelines-box">
+
+            <ul id="sortable" class="collapsible expandable">
+                <li class=active>
+                    <div class="collapsible-header">
+                        <i class="material-icons">whatshot</i>
+                            <table class="timelineheadertable">
+                                <tbody>
+                                    <tr>
+                                    <th style="width:50vw;"><span style=" margin-left:40vw; ">Action</span></th>
+                                    <th style="width:50vw; margin-left:40vw">
+                                        <div class="filters">
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>action_9</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>action_244</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>action_267</span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <i class="material-icons rotate right">expand_more</i>
+                        </div>
+                    <div class="collapsible-body">
+                        <div id="Action1" class="timelineholder"></div>
+                    </div>
+                </li>
+                <li class=active>
+                    <div class="collapsible-header">
+                        <i class="material-icons">insert_emoticon</i>
+                            <table class="timelineheadertable">
+                                <tbody>
+                                        <tr>
+                                    <th style="width:50vw;"><span style=" margin-left:40vw; ">Emotion</span></th>
+                                    <th style="width:50vw; margin-left:40vw">
+                                        <div class="filters">
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>happy</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>neutral</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>sad</span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <i class="material-icons rotate right">expand_more</i>
+                        </div>
+                    <div class="collapsible-body">
+                        <div id="Emotion"  class="timelineholder"></div>
+                    </div>
+                </li>
+                <li class=active>
+                    <div class="collapsible-header">
+                        <i class="material-icons">insert_chart</i>
+                        <table class="timelineheadertable">
+                            <tbody>
+                                <tr>
+                                    <th style="width:50vw"><span style="margin-left:40vw; ">Speech Rate</span></th>
+                                    <th style="width:50vw; margin-left:40vw">
+                                        <div class="filters">
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>Low</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>Medium</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>High</span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <i class="material-icons rotate right">expand_more</i>
+                        </div>
+                    <div class="collapsible-body" >
+                        <div id="speech-rate" class="timelineholder"></div>
+                    </div>
+                </li>
+                <li class=active>
+                    <div class="collapsible-header">
+                        <i class="material-icons">timeline</i>
+                            <table class="timelineheadertable">
+                                <tbody>
+                                    <tr>
+                                    <th style="width:50vw"><span style="margin-left:40vw; ">Pitch</span></th>
+                                    <th style="width:50vw; margin-left:40vw">
+                                        <div class="filters">
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>Low</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>Medium</span>
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" />
+                                                <span>High</span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <i class="material-icons rotate right">expand_more</i>
+                        </div>
+                    <div class="collapsible-body">
+                        <div id="pitch" class="timelineholder"></div>
+                    </div>
+                </li>
+                <li class=active>
+                    <div class="collapsible-header">
+                        <i class="material-icons">video_library</i>
+                        
+                        <table class="timelineheadertable">
+                            <tbody>
+                                <tr>
+                                    <th><span style="margin-left:45vw; ">Thumbnails</span></th>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <i class="material-icons rotate right">expand_more</i></div>
+                    <div class="collapsible-body">
+                        <div id="vidtimelineholder" class="timelineholder">
+                        </div>
+                </div>
+                </li>
+                <li class=active>
+                    <div class="collapsible-header">
+                        <i class="material-icons">assignment</i>
+                        
+                        <table class="timelineheadertable">
+                            <tbody>
+                                <tr>
+                                    <th><span style="margin-left:45vw; ">User Annotations</span></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <i class="material-icons rotate right">expand_more</i>
+                        </div>
+                    <div class="collapsible-body">
+                        <div id="AnnotationTimeline"  class="timelineholder"></div>
+                    </div>
+                </li>
+            </ul>
+            
+            <script>
+                $(document).ready(function () {
+                    $('.collapsible.expandable').collapsible({
+                        accordion: false, // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+                    });
+                });
+                $(function () {
+                    $('.collapsible.expandable .filters').on('click', function (e) {
+                        e.stopPropagation();
+                        // $(this).parent().trigger('click'); 
+                    });
+                });
+            </script>
+    
+            
+            <script src="load-annotations.js"></script>
+            <script>
+                //load the annotation
+                annotationQueryRefresh();
+                annotationTabPop();
+            </script>
+            <script src="focustimelines.js"></script>
+            <script src="timeline-marker.js"></script>
+            <script type="text/javascript" src="video-timeline-svg.js"></script>
+            <script type="text/javascript" src="speechrate-interval.js"></script>
+            <script type="text/javascript" src="pitch-area.js"></script>
+            <script type="text/javascript" src="action-1.js"></script>
+            <script type="text/javascript" src="emotion.js"></script>
+            <script type="text/javascript" src="annotationtimeline.js"></script>
+
+            <script type="text/javascript" src="filterOnLabel.js"></script>
+            <script type="text/javascript" src="timeline-filters.js"></script>
+            <script type="text/javascript" src="annotate.js"></script>
+            <script type="text/javascript" src="annotationTooltip.js"></script>
+            <script type="text/javascript" src="pandragging.js"></script>
+            <script type="text/javascript" src="vidStateLogger.js"></script>
+            <!--not done-->
+            <!--script type="text/javascript" src="stateLogger.js"></script-->
+        </div>
+    </div>
+</body> 
+
+</html>

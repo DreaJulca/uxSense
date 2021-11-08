@@ -1,0 +1,401 @@
+action,arbitrary_action
+abseiling,action_1
+air drumming,action_2
+answering questions,action_3
+applauding,action_4
+applying cream,action_5
+archery,action_6
+arm wrestling,action_7
+arranging flowers,action_8
+assembling computer,action_9
+auctioning,action_10
+baby waking up,action_11
+baking cookies,action_12
+balloon blowing,action_13
+bandaging,action_14
+barbequing,action_15
+bartending,action_16
+beatboxing,action_17
+bee keeping,action_18
+belly dancing,action_19
+bench pressing,action_20
+bending back,action_21
+bending metal,action_22
+biking through snow,action_23
+blasting sand,action_24
+blowing glass,action_25
+blowing leaves,action_26
+blowing nose,action_27
+blowing out candles,action_28
+bobsledding,action_29
+bookbinding,action_30
+bouncing on trampoline,action_31
+bowling,action_32
+braiding hair,action_33
+breading or breadcrumbing,action_34
+breakdancing,action_35
+brush painting,action_36
+brushing hair,action_37
+brushing teeth,action_38
+building cabinet,action_39
+building shed,action_40
+bungee jumping,action_41
+busking,action_42
+canoeing or kayaking,action_43
+capoeira,action_44
+carrying baby,action_45
+cartwheeling,action_46
+carving pumpkin,action_47
+catching fish,action_48
+catching or throwing baseball,action_49
+catching or throwing frisbee,action_50
+catching or throwing softball,action_51
+celebrating,action_52
+changing oil,action_53
+changing wheel,action_54
+checking tires,action_55
+cheerleading,action_56
+chopping wood,action_57
+clapping,action_58
+clay pottery making,action_59
+clean and jerk,action_60
+cleaning floor,action_61
+cleaning gutters,action_62
+cleaning pool,action_63
+cleaning shoes,action_64
+cleaning toilet,action_65
+cleaning windows,action_66
+climbing a rope,action_67
+climbing ladder,action_68
+climbing tree,action_69
+contact juggling,action_70
+cooking chicken,action_71
+cooking egg,action_72
+cooking on campfire,action_73
+cooking sausages,action_74
+counting money,action_75
+country line dancing,action_76
+cracking neck,action_77
+crawling baby,action_78
+crossing river,action_79
+crying,action_80
+curling hair,action_81
+cutting nails,action_82
+cutting pineapple,action_83
+cutting watermelon,action_84
+dancing ballet,action_85
+dancing charleston,action_86
+dancing gangnam style,action_87
+dancing macarena,action_88
+deadlifting,action_89
+decorating the christmas tree,action_90
+digging,action_91
+dining,action_92
+disc golfing,action_93
+diving cliff,action_94
+dodgeball,action_95
+doing aerobics,action_96
+doing laundry,action_97
+doing nails,action_98
+drawing,action_99
+dribbling basketball,action_100
+drinking,action_101
+drinking beer,action_102
+drinking shots,action_103
+driving car,action_104
+driving tractor,action_105
+drop kicking,action_106
+drumming fingers,action_107
+dunking basketball,action_108
+dying hair,action_109
+eating burger,action_110
+eating cake,action_111
+eating carrots,action_112
+eating chips,action_113
+eating doughnuts,action_114
+eating hotdog,action_115
+eating ice cream,action_116
+eating spaghetti,action_117
+eating watermelon,action_118
+egg hunting,action_119
+exercising arm,action_120
+exercising with an exercise ball,action_121
+extinguishing fire,action_122
+faceplanting,action_123
+feeding birds,action_124
+feeding fish,action_125
+feeding goats,action_126
+filling eyebrows,action_127
+finger snapping,action_128
+fixing hair,action_129
+flipping pancake,action_130
+flying kite,action_131
+folding clothes,action_132
+folding napkins,action_133
+folding paper,action_134
+front raises,action_135
+frying vegetables,action_136
+garbage collecting,action_137
+gargling,action_138
+getting a haircut,action_139
+getting a tattoo,action_140
+giving or receiving award,action_141
+golf chipping,action_142
+golf driving,action_143
+golf putting,action_144
+grinding meat,action_145
+grooming dog,action_146
+grooming horse,action_147
+gymnastics tumbling,action_148
+hammer throw,action_149
+headbanging,action_150
+headbutting,action_151
+high jump,action_152
+high kick,action_153
+hitting baseball,action_154
+hockey stop,action_155
+holding snake,action_156
+hopscotch,action_157
+hoverboarding,action_158
+hugging,action_159
+hula hooping,action_160
+hurdling,action_161
+hurling (sport),action_162
+ice climbing,action_163
+ice fishing,action_164
+ice skating,action_165
+ironing,action_166
+javelin throw,action_167
+jetskiing,action_168
+jogging,action_169
+juggling balls,action_170
+juggling fire,action_171
+juggling soccer ball,action_172
+jumping into pool,action_173
+jumpstyle dancing,action_174
+kicking field goal,action_175
+kicking soccer ball,action_176
+kissing,action_177
+kitesurfing,action_178
+knitting,action_179
+krumping,action_180
+laughing,action_181
+laying bricks,action_182
+long jump,action_183
+lunge,action_184
+making a cake,action_185
+making a sandwich,action_186
+making bed,action_187
+making jewelry,action_188
+making pizza,action_189
+making snowman,action_190
+making sushi,action_191
+making tea,action_192
+marching,action_193
+massaging back,action_194
+massaging feet,action_195
+massaging legs,action_196
+massaging person's head,action_197
+milking cow,action_198
+mopping floor,action_199
+motorcycling,action_200
+moving furniture,action_201
+mowing lawn,action_202
+news anchoring,action_203
+opening bottle,action_204
+opening present,action_205
+paragliding,action_206
+parasailing,action_207
+parkour,action_208
+passing American football (in game),action_209
+passing American football (not in game),action_210
+peeling apples,action_211
+peeling potatoes,action_212
+petting animal (not cat),action_213
+petting cat,action_214
+picking fruit,action_215
+planting trees,action_216
+plastering,action_217
+playing accordion,action_218
+playing badminton,action_219
+playing bagpipes,action_220
+playing basketball,action_221
+playing bass guitar,action_222
+playing cards,action_223
+playing cello,action_224
+playing chess,action_225
+playing clarinet,action_226
+playing controller,action_227
+playing cricket,action_228
+playing cymbals,action_229
+playing didgeridoo,action_230
+playing drums,action_231
+playing flute,action_232
+playing guitar,action_233
+playing harmonica,action_234
+playing harp,action_235
+playing ice hockey,action_236
+playing keyboard,action_237
+playing kickball,action_238
+playing monopoly,action_239
+playing organ,action_240
+playing paintball,action_241
+playing piano,action_242
+playing poker,action_243
+playing recorder,action_244
+playing saxophone,action_245
+playing squash or racquetball,action_246
+playing tennis,action_247
+playing trombone,action_248
+playing trumpet,action_249
+playing ukulele,action_250
+playing violin,action_251
+playing volleyball,action_252
+playing xylophone,action_253
+pole vault,action_254
+presenting weather forecast,action_255
+pull ups,action_256
+pumping fist,action_257
+pumping gas,action_258
+punching bag,action_259
+punching person (boxing),action_260
+push up,action_261
+pushing car,action_262
+pushing cart,action_263
+pushing wheelchair,action_264
+reading book,action_265
+reading newspaper,action_266
+recording music,action_267
+riding a bike,action_268
+riding camel,action_269
+riding elephant,action_270
+riding mechanical bull,action_271
+riding mountain bike,action_272
+riding mule,action_273
+riding or walking with horse,action_274
+riding scooter,action_275
+riding unicycle,action_276
+ripping paper,action_277
+robot dancing,action_278
+rock climbing,action_279
+rock scissors paper,action_280
+roller skating,action_281
+running on treadmill,action_282
+sailing,action_283
+salsa dancing,action_284
+sanding floor,action_285
+scrambling eggs,action_286
+scuba diving,action_287
+setting table,action_288
+shaking hands,action_289
+shaking head,action_290
+sharpening knives,action_291
+sharpening pencil,action_292
+shaving head,action_293
+shaving legs,action_294
+shearing sheep,action_295
+shining shoes,action_296
+shooting basketball,action_297
+shooting goal (soccer),action_298
+shot put,action_299
+shoveling snow,action_300
+shredding paper,action_301
+shuffling cards,action_302
+side kick,action_303
+sign language interpreting,action_304
+singing,action_305
+situp,action_306
+skateboarding,action_307
+ski jumping,action_308
+skiing (not slalom or crosscountry),action_309
+skiing crosscountry,action_310
+skiing slalom,action_311
+skipping rope,action_312
+skydiving,action_313
+slacklining,action_314
+slapping,action_315
+sled dog racing,action_316
+smoking,action_317
+smoking hookah,action_318
+snatch weight lifting,action_319
+sneezing,action_320
+sniffing,action_321
+snorkeling,action_322
+snowboarding,action_323
+snowkiting,action_324
+snowmobiling,action_325
+somersaulting,action_326
+spinning poi,action_327
+spray painting,action_328
+spraying,action_329
+springboard diving,action_330
+squat,action_331
+sticking tongue out,action_332
+stomping grapes,action_333
+stretching arm,action_334
+stretching leg,action_335
+strumming guitar,action_336
+surfing crowd,action_337
+surfing water,action_338
+sweeping floor,action_339
+swimming backstroke,action_340
+swimming breast stroke,action_341
+swimming butterfly stroke,action_342
+swing dancing,action_343
+swinging legs,action_344
+swinging on something,action_345
+sword fighting,action_346
+tai chi,action_347
+taking a shower,action_348
+tango dancing,action_349
+tap dancing,action_350
+tapping guitar,action_351
+tapping pen,action_352
+tasting beer,action_353
+tasting food,action_354
+testifying,action_355
+texting,action_356
+throwing axe,action_357
+throwing ball,action_358
+throwing discus,action_359
+tickling,action_360
+tobogganing,action_361
+tossing coin,action_362
+tossing salad,action_363
+training dog,action_364
+trapezing,action_365
+trimming or shaving beard,action_366
+trimming trees,action_367
+triple jump,action_368
+tying bow tie,action_369
+tying knot (not on a tie),action_370
+tying tie,action_371
+unboxing,action_372
+unloading truck,action_373
+using computer,action_374
+using remote controller (not gaming),action_375
+using segway,action_376
+vault,action_377
+waiting in line,action_378
+walking the dog,action_379
+washing dishes,action_380
+washing feet,action_381
+washing hair,action_382
+washing hands,action_383
+water skiing,action_384
+water sliding,action_385
+watering plants,action_386
+waxing back,action_387
+waxing chest,action_388
+waxing eyebrows,action_389
+waxing legs,action_390
+weaving basket,action_391
+welding,action_392
+whistling,action_393
+windsurfing,action_394
+wrapping present,action_395
+wrestling,action_396
+writing,action_397
+yawning,action_398
+yoga,action_399
+zumba,action_400

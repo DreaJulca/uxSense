@@ -1,0 +1,20 @@
+{
+		"neck"			: 0,
+		"head" 			: 1,
+		"pelvis"		: 2,
+		"left_shoulder"	: 3,
+		"left_elbow"	: 4,
+		"left_wrist"	: 5,
+		"left_hip"		: 6,
+		"left_knee"		: 7,
+		"left_ankle"	: 8,
+		"right_shoulder": 9,
+		"right_elbow"	:10,
+		"right_wrist"	:11,
+		"right_hip"		:12,
+		"right_knee"	:13,
+		"right_ankle"	:14,
+		"unk_1"	:15,
+		"unk_2"	:16,
+		"unk_3"	:17
+	}
