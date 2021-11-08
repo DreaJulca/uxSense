@@ -6,9 +6,13 @@
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "d3": "^7.1.1",
+    "lodash": "^4.17.21",
+    "material": "^0.4.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^3.4.4",
+    "videojs": "^1.0.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

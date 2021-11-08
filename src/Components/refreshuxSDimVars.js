@@ -36,6 +36,8 @@ function refreshuxSDimVars(){
 
 }
 
+export default refreshuxSDimVars;
+
 /*
 //marker
 var height = 100;

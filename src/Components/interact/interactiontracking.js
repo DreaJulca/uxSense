@@ -1,4 +1,7 @@
-function interactiontracking(d, eventUIElement, eventObject, eventTrigger, eventSupplemental = ''){//, d3Event){
+import {$,jQuery} from 'jquery';
+import * as d3 from 'd3';
+
+export default function interactiontracking(d, eventUIElement, eventObject, eventTrigger, eventSupplemental = ''){//, d3Event){
     var uxvideo = document.getElementById('video_html5_api');
 
     //Track event

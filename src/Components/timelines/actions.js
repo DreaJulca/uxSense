@@ -1,3 +1,9 @@
+import {$,jQuery} from 'jquery';
+import * as d3 from 'd3';
+import refreshuxSDimVars from '../refreshuxSDimVars';
+import interactiontracking from '../interact/interactiontracking';
+import { rescaleActions } from '../interact/focustimelines';
+
 var uxvideo = document.getElementById("video_html5_api");
 
 function createActionsTimeline(){

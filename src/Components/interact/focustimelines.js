@@ -1,3 +1,5 @@
+import refreshuxSDimVars from "../refreshuxSDimVars";
+import * as d3 from 'd3';
 //This is where we handle both the focus timeline and the timeline marker that hits all the table svgs
 var uxvideo = document.getElementById('video_html5_api');
 refreshuxSDimVars();
@@ -600,3 +602,5 @@ function rescaleAnnotations(){
     //So we'll need to make sure this works anyway! 
     createAnnotationsTimeline(false)
 }
+
+export {rescaleActions, rescaleAnnotations, rescaleEmotions, rescaleFrames, rescalePitch, rescaleSpeechrate, rescaleTimelines};
