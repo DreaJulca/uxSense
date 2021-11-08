@@ -21,3 +21,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# system-specific
+.1-p6-coffeemachine.mp4
+*.mp4
+/public/*.mp4
+/mongo
+/public/userAnnotations/data.json
+
+/public/private
+/public/modeloutput/private
+/public/captions/private
+/public/privateeval.html
