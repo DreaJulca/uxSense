@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, {useRef} from 'react';
 import VideoPlayer from './Components/interact/VideoPlayer';
 import Timelines from './Components/timelines/Timelines';
 import SearchBar from './Components/interact/SearchBar';
@@ -7,32 +7,7 @@ import FilterBox from './Components/interact/FilterBox';
 import AnnotationsBox from './Components/annotation/AnnotationsBox';
 import TagsTable from './Components/annotation/TagsTable';
 
-const playerRef = React.useRef(null);
-
-const videoJsOptions = { // lookup the options in the docs for more options
-  autoplay: true,
-  controls: true,
-  responsive: true,
-  fluid: true,
-  sources: [{
-    src: '1-p6-coffeemachine.mp4',
-    type: 'video/mp4'
-  }]
-}
-
-const handlePlayerReady = (player) => {
-  playerRef.current = player;
-
-  // you can handle player events here
-  player.on('waiting', () => {
-    console.log('player is waiting');
-  });
-
-  player.on('dispose', () => {
-    console.log('player will dispose');
-  });
-};
-
+/*
 var video = document.getElementById("video_html5_api");
 
 var vidTimelineInterval = 30;
@@ -63,6 +38,7 @@ video.addEventListener('loadeddata', function () {
         vidTimelineRecur(0, duration)
         video.currentTime = 1;
 });
+*/
 
 function App() {
   return (<div className="App">
@@ -70,9 +46,9 @@ function App() {
         <div class="left">
             <div class="menu">
                 <div class="menu-box">
-                    <nav style="background-color: darkolivegreen">
+                    <nav style={{'background-color': 'darkolivegreen'}}>
                         <div class="nav-wrapper">
-                            <a href="#" class="brand-logo center" style="color:white">
+                            <a href="#" class="brand-logo center" style={{color:'white'}}>
                                 <bold>uxSense</bold>
                             </a>
                         </div>
@@ -81,7 +57,7 @@ function App() {
             </div>
             <div class="video">
                 <div class="video-box">
-                <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
+                <VideoPlayer videoPath='TableauUser.mp4' />
                 </div>
             </div>
             <div class="timelines">
