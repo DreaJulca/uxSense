@@ -41,4 +41,5 @@ yarn-error.log*
 *.zip
 *.mp4
 /models/emotion_ferplus.tar.gz
-
+*model.ckpt.data-*
+*.bin
