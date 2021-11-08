@@ -1,11 +1,11 @@
 import './App.css';
-import './Components/timelines/main.js';
-import VideoPlayer from './Components/interact/videoPlayer';
-import Timelines from './Components/timelines/main';
-import SearchBar from './Components/interact/searchBar';
-import FilterBox from './Components/interact/filterBox';
-import AnnotationsBox from './Components/annotation/annotationsBox';
-import TagsTable from './Components/annotation/tagsTable';
+import React from 'react';
+import VideoPlayer from './Components/interact/VideoPlayer';
+import Timelines from './Components/timelines/Timelines';
+import SearchBar from './Components/interact/SearchBar';
+import FilterBox from './Components/interact/FilterBox';
+import AnnotationsBox from './Components/annotation/AnnotationsBox';
+import TagsTable from './Components/annotation/TagsTable';
 
 const playerRef = React.useRef(null);
 

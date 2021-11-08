@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import React from 'react';
 
 var data = [[0, 50], [100, 80], [200, 40], [300, 60], [400, 30]];
 

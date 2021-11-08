@@ -1,7 +1,8 @@
 // The timelines don't actually exist as components yet; may need to start from scratch for some of this stuff.
 //import ActionTimeline from './actions';
+import React from 'react';
 
-export const Timelines = ( props ) => {
+export default function Timelines( props ) {
     return(<div class="responsive-table table-status-sheet">
         <table class="highlight bordered" style="height:310px;">
             <thead>

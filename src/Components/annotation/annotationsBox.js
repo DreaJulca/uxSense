@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default AnnotationsBox => {
     return(<div class="annotations-box">
         <form accept-charset="UTF-8" action="action_page.php" autocomplete="off" method="GET" target="_blank">

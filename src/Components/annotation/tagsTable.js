@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default TagsTable => {
     
 return (<div class="tags-table">
