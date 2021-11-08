@@ -1,0 +1,56 @@
+body {
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: scroll;
+}
+
+.annotlette {
+    height: 420px;
+    width: 1005px;
+    position:relative;
+    left:0px;
+}
+
+
+
+.svg-holder {
+    height: 320px;
+    width: 605px;
+    position:relative;
+    left:0px;
+    transform:translate(0px,100px);
+}
+
+
+svg {
+    height: 320px;
+    width: 600px;
+    float:left;
+}
+
+.ann-head{
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; 
+    width: 600px;
+}
+
+.ann-text{
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant: normal; font-weight: 100; line-height: 18.5px; 
+    width: 600px;
+    float:left;
+}
+
+ul{
+    list-style-type: none;
+    float:right;
+    top:0px;
+}
+
+.transcript-holder{
+    width: 600px;
+}
+
+.transcript-text{
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 15px; font-style: normal; font-variant: normal; font-weight: 100; line-height: 12px; 
+    width: 600px;
+}
