@@ -33,3 +33,12 @@ yarn-error.log*
 /public/modeloutput/private
 /public/captions/private
 /public/privateeval.html
+
+# model data 
+*.onnx
+*.pkl
+*.npz
+*.zip
+*.mp4
+/models/emotion_ferplus.tar.gz
+
