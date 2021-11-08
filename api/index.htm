@@ -1,0 +1,48 @@
+<html>
+  <head>
+	<title>hcEye</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="d3/dist/d3.min.js"></script>
+	<script src="d3-fetch/dist/d3-fetch.min.js"></script>
+	<script src="d3-color/dist/d3-color.min.js"></script>
+	<!--temporarily use script courtesy John Walley https://bl.ocks.org/johnwalley/e1d256b81e51da68f7feb632a53c3518-->
+	<script src="d3-extras/d3-simple-slider.min.js"></script>
+	<script src="lodash/lodash.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="css/index.css">
+    
+  </head>
+  <body>
+	<div id="videocontainer">
+		<!--video id="v" controls muted="muted" autoplay ontimeupdate="log_time(this)"-->
+		<video id="v" controls muted="muted" autoplay>
+			<source src="http://localhost:3000/video?vid=VR_User" id="v_src" type="video/mp4">
+			<!--source src="assets/vga_01_01.mp4" type="video/mp4"-->
+		</video>
+		
+		<canvas class="videolayer" id="c" width=1280 height=920></canvas>
+		<canvas class="videolayer" id="joints" width=1280 height=920></canvas>
+		<div id="rightpanel"></div>
+		<!--svg id="slider" height="100px"></svg-->
+		<div class="row align-items-center">
+			<div class="col-sm"><div id="scrubber-slider"></div></div>
+		</div>
+		<!--input id="slider-input" type="range" min="0" value="1" /-->
+
+	</div>    
+	<div id="annotatediv" style="position:absolute; bottom:0;">
+	</div>
+
+	<div class="wrapper">
+		<div id="meatball">
+			<form action="/upload" enctype="multipart/form-data" method="POST"> 
+				<input type="file" name="vidupload" />
+				<input type="submit" value="Upload Video"/>
+			</form>
+		</div>
+	</div>
+
+    <script src="index.js"></script>
+    
+  </body>
+</html>

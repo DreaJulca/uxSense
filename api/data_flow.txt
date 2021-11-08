@@ -1,0 +1,20 @@
+1. index.htm: <video><source> is requested; handled by server.js
+2. server.js: in videoHandler(), spawn a python process to run models/processing_manager.py with video path as param
+3. models/processing_manager.py: It just calls the first step in the pipeline, models/generate_skeleton.py. 
+   I'd intended to make this a process control manager, but instead left it as the starting point of an uncontrolled flow. 
+4. models/generate_skeleton.py: Does the following--
+    a) creates subdirectories, 
+    b) runs models/pt_3dpose/infer_video.py, which prepares video for model i/o, 
+    c) runs models/pt_3dpose/prepare_data_2d_custom.py, which runs some 2D inferences necessary for 3D pose 
+    d) runs models/pt_3dpose/run.py, which predicts 3D pose. This output is used in later filters. 
+    e) runs models/segment.py, which is the next filter---this should be a step handled by models/processing_manager.py instead of generate_skeleton.py 
+5. models/segment.py: Reshapes 3D pose output to be segmented by models/segment.R, then runs the R part of the segmentation process.
+6. models/segment.R: Takes 3D joint angles, then calculates E-Divisive changepoints from series; these are the intervals we use for semantic action prediction.
+    Then, it runs models/postseg_action_pred_only.R.
+7. models/postseg_action_pred_only.R: Runs models/kinetics-i3d/evaluate.py for each frame interval calculated by models/segement.R. 
+    Then, it runs models/coord_plot_data.R and models/tabulate_actions.R, which reshape semantic actions and coordinates for use in the interface.
+8. models/coord_plot_data.R and models/tabulate_actions.R output the following:
+		actionpath: "skelframes/" + vidCode + "/actions_best.csv",
+		posepath: "skelframes/" + vidCode + "/all_pose_estimates.csv", and
+		histpath: "skelframes/" + vidCode + "/pose_histogram_data.json"
+    All of these are used by the interface. 
