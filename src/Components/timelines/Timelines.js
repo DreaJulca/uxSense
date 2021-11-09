@@ -1,54 +1,21 @@
 // The timelines don't actually exist as components yet; may need to start from scratch for some of this stuff.
 //import ActionTimeline from './actions';
 import React from 'react';
-
+import TimelineTemplate from './TimelineTemplate';
 
 export default function Timelines( props ) {
-    return(<div className="responsive-table table-status-sheet">
-        <table className="highlight bordered" style={{height:"100%"}}>
-            <thead style={{height:"5%"}}>
-                <tr>
-                    <th className="center" style={{width: "20%"}}>Features</th>
-                    <th className="center" style={{width: "80%"}}>Timelines</th>
-                </tr>
-            </thead>
-            <tbody style={{height:"95%"}}>
-                <tr>
-                    <td style={{width: "20%"}}>Video</td>
-                    <td style={{width: "80%"}}>
+    var rows = [];
+    //probably need to make it so that there's more to this timeline array than just types
+    // but for now it's fine
+    //TODO: We're going to add a selector for the specific video somewhere; 
+    // right now, we're just choosing the first videoname in the list here
+    for (var i = 0; i < props.timelineArray.length; i++) {
+        rows.push(<TimelineTemplate 
+            key={i} 
+            videoName={props.videoArray[0]} 
+            Type={props.timelineArray[i].Type}/>);
+    }
 
-                        <canvas id="myCanvas" width="600" height="100" style={{border:"1px solid #d3d3d3"}}>
-                        <div id="thumbnails"></div>
-                        </canvas>
-                        <script>
-                        </script>
-                    </td>
-                </tr>
-                <tr>
-                    <td style={{width: "20%"}}>Speech Rate</td>
-                    <td style={{width: "80%"}}>
-                        <div id="speech-rate"></div>
-                        <script type="text/javascript" src="basic-line.js"></script>
-                    </td>
-                </tr>
-                <tr>
-                    <td style={{width: "20%"}}>Pitch</td>
-                    <td style={{width: "80%"}}>
-                        <div id="pitch"></div>
-                        <script type="text/javascript" src="linechart.js"></script>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Action1</td>
-                </tr>
-                <tr>
-                    <td>Action2</td>
-                </tr>
-                <tr>
-                    <td>Posture</td>
-                </tr>
-            </tbody>
-        </table>
-        </div>
+    return(<div>{rows}</div>
     )
 }

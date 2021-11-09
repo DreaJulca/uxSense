@@ -3,7 +3,6 @@ import React from 'react';
 export default TagsTable => {
     
 return (<div className="tags-table">
-<div className="responsive-table table-status-sheet">
     <table className="highlight bordered">
         <thead>
             <tr>
@@ -20,7 +19,6 @@ return (<div className="tags-table">
             </tr>
         </tbody>
     </table>
-</div>
 </div>
 )
 }

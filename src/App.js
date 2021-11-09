@@ -40,6 +40,23 @@ video.addEventListener('loadeddata', function () {
 });
 */
 
+//for now, manually define video to show; update this later--will need to
+// turn into list and change the video renderer s.t. it loops through each.
+// Right now, we're passing this to everything EXCEPT video as an array
+// and in each of those components, it is just selecting the first one.
+// TODO: change this once you add interface features to select vids
+var VideoArray = ['TableauUser.mp4']
+
+//for now, manually define list of timelines; update this later
+var TimelineArray = [
+  {Type: "action"},
+  {Type: "emotion"},
+  {Type: "speech"},
+  {Type: "pitch"},
+  {Type: "frames"},
+  {Type: "annotations"}
+]
+
 function App() {
   return (<div className="App">
       <div className="grid-container">
@@ -55,12 +72,15 @@ function App() {
                 </div>
             </div>
             <div className="video">
-                <VideoPlayer videoPath='TableauUser.mp4' />
+                <VideoPlayer videoPath={VideoArray[0]} />
             </div>
             <div className="transcript">
             </div>
+            <div className="tagsTab">
+              <TagsTable />
+            </div>
             <div className="timelines">
-              <Timelines />
+              <Timelines videoArray={VideoArray} timelineArray={TimelineArray}/>
             </div>
         </div>
         <div className="search">
@@ -71,9 +91,6 @@ function App() {
         </div>
         <div className="annotations">
           <AnnotationsBox />
-        </div>
-        <div className="tagsTab">
-          <TagsTable />
         </div>
       </div>
   );
