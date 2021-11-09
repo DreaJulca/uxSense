@@ -2,21 +2,22 @@
 //import ActionTimeline from './actions';
 import React from 'react';
 
+
 export default function Timelines( props ) {
-    return(<div class="responsive-table table-status-sheet">
-        <table class="highlight bordered" style={{height:"310px"}}>
-            <thead>
+    return(<div className="responsive-table table-status-sheet">
+        <table className="highlight bordered" style={{height:"100%"}}>
+            <thead style={{height:"5%"}}>
                 <tr>
-                    <th class="center" style={{width: "20%"}}>Features</th>
-                    <th class="center" style={{width: "80%"}}>Timelines</th>
+                    <th className="center" style={{width: "20%"}}>Features</th>
+                    <th className="center" style={{width: "80%"}}>Timelines</th>
                 </tr>
             </thead>
-            <tbody style={{height:"250px;"}}>
+            <tbody style={{height:"95%"}}>
                 <tr>
                     <td style={{width: "20%"}}>Video</td>
                     <td style={{width: "80%"}}>
 
-                        <canvas id="myCanvas" width="600" height="100" style={{border:"1px solid #d3d3d3;"}}>
+                        <canvas id="myCanvas" width="600" height="100" style={{border:"1px solid #d3d3d3"}}>
                         <div id="thumbnails"></div>
                         </canvas>
                         <script>

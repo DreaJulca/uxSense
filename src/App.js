@@ -42,46 +42,40 @@ video.addEventListener('loadeddata', function () {
 
 function App() {
   return (<div className="App">
-      <div class="grid-container">
-        <div class="left">
-            <div class="menu">
-                <div class="menu-box">
-                    <nav style={{'background-color': 'darkolivegreen'}}>
-                        <div class="nav-wrapper">
-                            <a href="#" class="brand-logo center" style={{color:'white'}}>
-                                <bold>uxSense</bold>
+      <div className="grid-container">
+            <div className="banner">
+                <div className="menu-box">
+                    <nav style={{'backgroundColor': 'darkolivegreen'}}>
+                        <div className="nav-wrapper">
+                            <a href="#" className="brand-logo center" style={{color:'white'}}>
+                                uxSense
                             </a>
                         </div>
                     </nav>
                 </div>
             </div>
-            <div class="video">
-                <div class="video-box">
+            <div className="video">
                 <VideoPlayer videoPath='TableauUser.mp4' />
-                </div>
             </div>
-            <div class="timelines">
-                <div class="timelines-box">
-                  <Timelines />
-                </div>
+            <div className="transcript">
             </div>
-        </div>
-        <div class="right">
-            <div class="search">
-              <SearchBar />
-            </div>
-            <div class="filter">
-              <FilterBox />
-            </div>
-            <div class="annotations">
-              <AnnotationsBox />
-            </div>
-            <div class="tags">
-              <TagsTable />
+            <div className="timelines">
+              <Timelines />
             </div>
         </div>
-    </div>
-    </div>
+        <div className="search">
+          <SearchBar />
+        </div>
+        <div className="filter">
+          <FilterBox />
+        </div>
+        <div className="annotations">
+          <AnnotationsBox />
+        </div>
+        <div className="tagsTab">
+          <TagsTable />
+        </div>
+      </div>
   );
 }
 

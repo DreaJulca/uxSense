@@ -2,17 +2,14 @@ import React from 'react';
 
 export default TagsTable => {
     
-return (<div class="tags-table">
-<div class="responsive-table table-status-sheet">
-    <table class="highlight bordered">
-            <col span="1" style={{width: "20%"}} />
-            <col span="1" style={{width: "30%"}} />
-            <col span="1" style={{width: "50%"}} />
+return (<div className="tags-table">
+<div className="responsive-table table-status-sheet">
+    <table className="highlight bordered">
         <thead>
             <tr>
-                <th class="center" style={{width: "20%"}}>Timestamp</th>
-                <th class="center" style={{width: "30%"}}>Tags</th>
-                <th class="center" style={{width: "50%"}}>Annotations</th>
+                <th className="center" style={{width: "20%"}}>Timestamp</th>
+                <th className="center" style={{width: "30%"}}>Tags</th>
+                <th className="center" style={{width: "50%"}}>Annotations</th>
             </tr>
         </thead>
         <tbody>

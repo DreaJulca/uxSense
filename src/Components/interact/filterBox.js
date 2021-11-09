@@ -11,7 +11,7 @@ d3.select('path')
 
 
 export default FilterBox => {
-    return(<div class="filter-box">
+    return(<div className="filter-box">
         <svg width="600" height="100">
             <path transform="translate(200, 0)" />
         </svg>
