@@ -106,7 +106,7 @@ body {
 
 .tagsTab {
   grid-area: tagsTab;
-  margin: 1vmin auto;
+  width: 25vw;
   overflow-y: hidden;
 }
 
@@ -220,6 +220,18 @@ ul {
   text-indent: 10px; */
 }
 
+.panel-select {
+  height: 25px;
+  display: grid;
+  grid-template-areas: "analysis report"
+}
+
+.analysis-view-select {
+  grid-area: analysis;
+}
+.report-view-select {
+  grid-area: report;
+}
 
 /* .side-nav a {
   line-height: 15px !important;

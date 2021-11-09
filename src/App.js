@@ -69,6 +69,16 @@ function App() {
                             </a>
                         </div>
                     </nav>
+                    <nav style={{'backgroundColor': 'black'}}>
+                        <div className="panel-select">
+                            <a href="#" className="analysis-view" style={{color:'white'}}>
+                                Analysis
+                            </a>
+                            <a href="#" className="report-view" style={{color:'white'}}>
+                                Report
+                            </a>
+                        </div>
+                    </nav>
                 </div>
             </div>
             <div className="video">
