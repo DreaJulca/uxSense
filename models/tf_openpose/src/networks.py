@@ -2,6 +2,7 @@ import os
 from os.path import dirname, abspath
 
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 
 from tf_openpose.src.network_mobilenet import MobilenetNetwork
 from tf_openpose.src.network_mobilenet_thin import MobilenetNetworkThin
@@ -118,7 +119,7 @@ def get_network(type, placeholder_input, sess_for_load=None, trainable=True):
                 'mobilenet_v2_small': 'trained/mobilenet_v2_w0.5_r0.5/model_latest-380401',
             }
             ckpt_path = os.path.join(_get_base_path(), ckpts[type])
-            loader = tf.train.Saver()
+            loader = tf.compat.v1.train.Saver()
             try:
                 loader.restore(sess_for_load, ckpt_path)
             except Exception as e:

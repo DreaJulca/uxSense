@@ -252,4 +252,3 @@ class Human36mDataset(MocapDataset):
             
     def supports_semi_supervised(self):
         return True
-   

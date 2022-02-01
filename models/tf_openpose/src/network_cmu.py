@@ -1,5 +1,6 @@
 from tf_openpose.src import network_base
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 
 
 class CmuNetwork(network_base.BaseNetwork):
@@ -140,7 +141,7 @@ class CmuNetwork(network_base.BaseNetwork):
              .conv(1, 1, 128, 1, 1, name='Mconv6_stage6_L2')
              .conv(1, 1, 19, 1, 1, relu=False, name='Mconv7_stage6_L2'))
 
-        with tf.variable_scope('Openpose'):
+        with tf.compat.v1.variable_scope('Openpose'):
             (self.feed('Mconv7_stage6_L2',
                        'Mconv7_stage6_L1')
                  .concat(3, name='concat_stage7'))

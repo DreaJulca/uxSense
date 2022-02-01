@@ -7,6 +7,7 @@ from keras.models import Sequential
 from keras.models import load_model
 import numpy as np
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 from tensorflow.python.framework import ops
 
 from .preprocessor import preprocess_input
@@ -56,7 +57,7 @@ def compile_saliency_function(model, activation_layer='conv2d_7'):
 
 
 def modify_backprop(model, name, task):
-    graph = tf.get_default_graph()
+    graph = tf.compat.v1.get_default_graph()
     with graph.gradient_override_map({'Relu': name}):
 
         # get layers that have an activation

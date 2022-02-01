@@ -63,4 +63,3 @@ class CustomDataset(MocapDataset):
             
     def supports_semi_supervised(self):
         return False
-   

@@ -19,13 +19,14 @@ from __future__ import division
 from __future__ import print_function
 
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 
 from preprocessing import cifarnet_preprocessing
 from preprocessing import inception_preprocessing
 from preprocessing import lenet_preprocessing
 from preprocessing import vgg_preprocessing
 
-slim = tf.contrib.slim
+import tf_slim as slim
 
 
 def get_preprocessing(name, is_training=False):

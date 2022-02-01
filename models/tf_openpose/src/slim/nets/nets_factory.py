@@ -20,6 +20,7 @@ from __future__ import print_function
 import functools
 
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 
 from nets import alexnet
 from nets import cifarnet
@@ -32,7 +33,7 @@ from nets import resnet_v2
 from nets import vgg
 from nets.nasnet import nasnet
 
-slim = tf.contrib.slim
+import tf_slim as slim
 
 networks_map = {'alexnet_v2': alexnet.alexnet_v2,
                 'cifarnet': cifarnet.cifarnet,

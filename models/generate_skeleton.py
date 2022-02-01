@@ -133,19 +133,19 @@ def main(argv):
     print(str_3dpose_cmd)
     print("*****************************")
 
-    os.chdir(cd + "/models/pt_3dpose/")
-    subprocess.check_call(str_3dpose_vid_prep_cmd, shell=True)
+    #os.chdir(cd + "/models/pt_3dpose/")
+    #subprocess.check_call(str_3dpose_vid_prep_cmd, shell=True)
     #os.system(str_3dpose_vid_prep_cmd)
 
-    os.chdir(cd + "/models/pt_3dpose/data/")
-    subprocess.check_call(str_3dpose_2ddata_cmd, shell=True)
+    #os.chdir(cd + "/models/pt_3dpose/data/")
+    #subprocess.check_call(str_3dpose_2ddata_cmd, shell=True)
     #os.system(str_3dpose_2ddata_cmd)
 
-    os.chdir(cd + "/models/pt_3dpose/")
-    subprocess.check_call(str_3dpose_cmd, shell=True)
+    #os.chdir(cd + "/models/pt_3dpose/")
+    #subprocess.check_call(str_3dpose_cmd, shell=True)
     #os.system(str_3dpose_cmd)
 
-    os.chdir(cd)
+    #os.chdir(cd)
 
     # OpenPose
     from tf_openpose.src.estimator import TfPoseEstimator

@@ -118,4 +118,3 @@ class HumanEvaDataset(MocapDataset):
                     'positions': positions,
                     'cameras': self._cameras[subject],
                 }
-   

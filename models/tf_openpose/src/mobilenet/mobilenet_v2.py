@@ -26,11 +26,12 @@ import copy
 import functools
 
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 
 from tf_openpose.src.mobilenet import conv_blocks as ops
 from tf_openpose.src.mobilenet import mobilenet as lib
 
-slim = tf.contrib.slim
+import tf_slim as slim
 op = lib.op
 
 expand_input = ops.expand_input_by_factor

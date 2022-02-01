@@ -2,18 +2,19 @@ import sys
 
 import numpy as np
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
+tf.compat.v1.disable_eager_execution()
+import tf_slim as slim
 
 from tf_openpose.src import common
 
 DEFAULT_PADDING = 'SAME'
 
 
-_init_xavier = tf.contrib.layers.xavier_initializer()
-_init_norm = tf.truncated_normal_initializer(stddev=0.01)
+_init_xavier = tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform")
+_init_norm = tf.compat.v1.truncated_normal_initializer(stddev=0.01)
 _init_zero = slim.init_ops.zeros_initializer()
-_l2_regularizer_00004 = tf.contrib.layers.l2_regularizer(0.00004)
-_l2_regularizer_convb = tf.contrib.layers.l2_regularizer(common.regularizer_conv)
+_l2_regularizer_00004 = tf.keras.regularizers.l2(0.5 * (0.00004))
+_l2_regularizer_convb = tf.keras.regularizers.l2(0.5 * (common.regularizer_conv))
 
 
 def layer(op):
@@ -54,7 +55,7 @@ class BaseNetwork(object):
         # If true, the resulting variables are set as trainable
         self.trainable = trainable
         # Switch variable for dropout
-        self.use_dropout = tf.placeholder_with_default(tf.constant(1.0),
+        self.use_dropout = tf.compat.v1.placeholder_with_default(tf.constant(1.0),
                                                        shape=[],
                                                        name='use_dropout')
         self.setup()
@@ -75,8 +76,8 @@ class BaseNetwork(object):
             if isinstance(data_dict[op_name], np.ndarray):
                 if 'RMSProp' in op_name:
                     continue
-                with tf.variable_scope('', reuse=True):
-                    var = tf.get_variable(op_name.replace(':0', ''))
+                with tf.compat.v1.variable_scope('', reuse=True):
+                    var = tf.compat.v1.get_variable(op_name.replace(':0', ''))
                     try:
                         session.run(var.assign(data_dict[op_name]))
                     except Exception as e:
@@ -84,10 +85,10 @@ class BaseNetwork(object):
                         print(e)
                         sys.exit(-1)
             else:
-                with tf.variable_scope(op_name, reuse=True):
+                with tf.compat.v1.variable_scope(op_name, reuse=True):
                     for param_name, data in data_dict[op_name].items():
                         try:
-                            var = tf.get_variable(param_name.decode("utf-8"))
+                            var = tf.compat.v1.get_variable(param_name.decode("utf-8"))
                             session.run(var.assign(data))
                         except ValueError as e:
                             print(e)
@@ -132,7 +133,7 @@ class BaseNetwork(object):
 
     def make_var(self, name, shape, trainable=True):
         '''Creates a new TensorFlow variable.'''
-        return tf.get_variable(name, shape, trainable=self.trainable & trainable, initializer=tf.contrib.layers.xavier_initializer())
+        return tf.compat.v1.get_variable(name, shape, trainable=self.trainable & trainable, initializer=tf.compat.v1.keras.initializers.VarianceScaling(scale=1.0, mode="fan_avg", distribution="uniform"))
 
     def validate_padding(self, padding):
         '''Verifies that the padding is one of the supported ones.'''
@@ -162,7 +163,7 @@ class BaseNetwork(object):
 
     @layer
     def upsample(self, input, factor, name):
-        return tf.image.resize_bilinear(input, [int(input.get_shape()[1]) * factor, int(input.get_shape()[2]) * factor], name=name)
+        return tf.image.resize(input, [int(input.get_shape()[1]) * factor, int(input.get_shape()[2]) * factor], method=tf.image.ResizeMethod.BILINEAR, name=name)
 
     @layer
     def separable_conv(self, input, k_h, k_w, c_o, stride, name, relu=True, set_bias=True):
@@ -237,8 +238,8 @@ class BaseNetwork(object):
         assert c_i % group == 0
         assert c_o % group == 0
         # Convolution for a given input and kernel
-        convolve = lambda i, k: tf.nn.conv2d(i, k, [1, s_h, s_w, 1], padding=padding)
-        with tf.variable_scope(name) as scope:
+        convolve = lambda i, k: tf.nn.conv2d(input=i, filters=k, strides=[1, s_h, s_w, 1], padding=padding)
+        with tf.compat.v1.variable_scope(name) as scope:
             kernel = self.make_var('weights', shape=[k_h, k_w, c_i / group, c_o], trainable=self.trainable & trainable)
             if group == 1:
                 # This is the common-case. Convolve the input without any further complications.
@@ -267,7 +268,7 @@ class BaseNetwork(object):
     @layer
     def max_pool(self, input, k_h, k_w, s_h, s_w, name, padding=DEFAULT_PADDING):
         self.validate_padding(padding)
-        return tf.nn.max_pool(input,
+        return tf.nn.max_pool2d(input=input,
                               ksize=[1, k_h, k_w, 1],
                               strides=[1, s_h, s_w, 1],
                               padding=padding,
@@ -276,7 +277,7 @@ class BaseNetwork(object):
     @layer
     def avg_pool(self, input, k_h, k_w, s_h, s_w, name, padding=DEFAULT_PADDING):
         self.validate_padding(padding)
-        return tf.nn.avg_pool(input,
+        return tf.nn.avg_pool2d(input=input,
                               ksize=[1, k_h, k_w, 1],
                               strides=[1, s_h, s_w, 1],
                               padding=padding,
@@ -301,7 +302,7 @@ class BaseNetwork(object):
 
     @layer
     def fc(self, input, num_out, name, relu=True):
-        with tf.variable_scope(name) as scope:
+        with tf.compat.v1.variable_scope(name) as scope:
             input_shape = input.get_shape()
             if input_shape.ndims == 4:
                 # The input is spatial. Vectorize it first.
@@ -313,7 +314,7 @@ class BaseNetwork(object):
                 feed_in, dim = (input, input_shape[-1].value)
             weights = self.make_var('weights', shape=[dim, num_out])
             biases = self.make_var('biases', [num_out])
-            op = tf.nn.relu_layer if relu else tf.nn.xw_plus_b
+            op = tf.compat.v1.nn.relu_layer if relu else tf.compat.v1.nn.xw_plus_b
             fc = op(feed_in, weights, biases, name=scope.name)
             return fc
 
@@ -325,7 +326,7 @@ class BaseNetwork(object):
             # need to be explicitly squeezed, since they're not broadcast-able
             # in TensorFlow's NHWC ordering (unlike Caffe's NCHW).
             if input_shape[1] == 1 and input_shape[2] == 1:
-                input = tf.squeeze(input, squeeze_dims=[1, 2])
+                input = tf.squeeze(input, axis=[1, 2])
             else:
                 raise ValueError('Rank 2 tensor input expected for softmax!')
         return tf.nn.softmax(input, name=name)
@@ -333,7 +334,7 @@ class BaseNetwork(object):
     @layer
     def batch_normalization(self, input, name, scale_offset=True, relu=False):
         # NOTE: Currently, only inference is supported
-        with tf.variable_scope(name) as scope:
+        with tf.compat.v1.variable_scope(name) as scope:
             shape = [input.get_shape()[-1]]
             if scale_offset:
                 scale = self.make_var('scale', shape=shape)
@@ -357,4 +358,4 @@ class BaseNetwork(object):
     @layer
     def dropout(self, input, keep_prob, name):
         keep = 1 - self.use_dropout + (self.use_dropout * keep_prob)
-        return tf.nn.dropout(input, keep, name=name)
+        return tf.nn.dropout(input, rate=1 - (keep), name=name)

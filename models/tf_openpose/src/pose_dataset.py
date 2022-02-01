@@ -20,6 +20,7 @@ import numpy as np
 import time
 
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 
 from tensorpack.dataflow import MultiThreadMapData
 from tensorpack.dataflow.image import MapDataComponent
@@ -394,7 +395,7 @@ class DataFlowToQueue(threading.Thread):
 
         self.ds = ds
         self.placeholders = placeholders
-        self.queue = tf.FIFOQueue(queue_size, [ph.dtype for ph in placeholders], shapes=[ph.get_shape() for ph in placeholders])
+        self.queue = tf.queue.FIFOQueue(queue_size, [ph.dtype for ph in placeholders], shapes=[ph.get_shape() for ph in placeholders])
         self.op = self.queue.enqueue(placeholders)
         self.close_op = self.queue.close(cancel_pending_enqueues=True)
 
@@ -416,7 +417,7 @@ class DataFlowToQueue(threading.Thread):
         return self.queue.size()
 
     def start(self):
-        self._sess = tf.get_default_session()
+        self._sess = tf.compat.v1.get_default_session()
         super(DataFlowToQueue).start()
 
     def set_coordinator(self, coord):
@@ -469,7 +470,7 @@ if __name__ == '__main__':
     # TestDataSpeed(df).start()
     # sys.exit(0)
 
-    with tf.Session() as sess:
+    with tf.compat.v1.Session() as sess:
         df.reset_state()
         t1 = time.time()
         for idx, dp in enumerate(df.get_data()):

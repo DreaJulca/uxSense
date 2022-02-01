@@ -114,7 +114,7 @@ def im_conv_body_only(model, im, target_scale, target_max_size):
         im, target_scale, target_max_size
     )
     workspace.FeedBlob(core.ScopedName('data'), im_blob)
-    workspace.RunNet(model.conv_body_net.Proto().name, allow_fail=True)
+    workspace.RunNet(model.conv_body_net.Proto().name)
     return im_scale
 
 
@@ -155,8 +155,7 @@ def im_detect_bbox(model, im, target_scale, target_max_size, boxes=None):
 
     for k, v in inputs.items():
         workspace.FeedBlob(core.ScopedName(k), v)
-    print(model.net.Proto().name)
-    workspace.RunNet(model.net.Proto().name, allow_fail=True)
+    workspace.RunNet(model.net.Proto().name)
 
     # Read out blobs
     if cfg.MODEL.FASTER_RCNN:
@@ -399,7 +398,7 @@ def im_detect_mask(model, im_scale, boxes):
 
     for k, v in inputs.items():
         workspace.FeedBlob(core.ScopedName(k), v)
-    workspace.RunNet(model.mask_net.Proto().name, allow_fail=True)
+    workspace.RunNet(model.mask_net.Proto().name)
 
     # Fetch masks
     pred_masks = workspace.FetchBlob(
@@ -568,7 +567,7 @@ def im_detect_keypoints(model, im_scale, boxes):
 
     for k, v in inputs.items():
         workspace.FeedBlob(core.ScopedName(k), v)
-    workspace.RunNet(model.keypoint_net.Proto().name, allow_fail=True)
+    workspace.RunNet(model.keypoint_net.Proto().name)
 
     pred_heatmaps = workspace.FetchBlob(core.ScopedName('kps_score')).squeeze()
 

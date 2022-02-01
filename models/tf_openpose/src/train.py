@@ -10,6 +10,7 @@ import time
 import cv2
 import numpy as np
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 from tqdm import tqdm
 from tensorpack.dataflow.remote import RemoteDataZMQ
 
@@ -61,9 +62,9 @@ if __name__ == '__main__':
 
     logger.info('define model+')
     with tf.device(tf.DeviceSpec(device_type="GPU", device_index=0)):
-        input_node = tf.placeholder(tf.float32, shape=(args.batchsize, args.input_height, args.input_width, 3), name='image')
-        vectmap_node = tf.placeholder(tf.float32, shape=(args.batchsize, output_h, output_w, 38), name='vectmap')
-        heatmap_node = tf.placeholder(tf.float32, shape=(args.batchsize, output_h, output_w, 19), name='heatmap')
+        input_node = tf.compat.v1.placeholder(tf.float32, shape=(args.batchsize, args.input_height, args.input_width, 3), name='image')
+        vectmap_node = tf.compat.v1.placeholder(tf.float32, shape=(args.batchsize, output_h, output_w, 38), name='vectmap')
+        heatmap_node = tf.compat.v1.placeholder(tf.float32, shape=(args.batchsize, output_h, output_w, 19), name='heatmap')
 
         # prepare data
         if not args.remote_data:
@@ -95,7 +96,7 @@ if __name__ == '__main__':
     outputs = []
     for gpu_id in range(args.gpus):
         with tf.device(tf.DeviceSpec(device_type="GPU", device_index=gpu_id)):
-            with tf.variable_scope(tf.get_variable_scope(), reuse=(gpu_id > 0)):
+            with tf.compat.v1.variable_scope(tf.compat.v1.get_variable_scope(), reuse=(gpu_id > 0)):
                 net, pretrain_path, last_layer = get_network(args.model, q_inp_split[gpu_id])
                 vect, heat = net.loss_last()
                 output_vectmap.append(vect)
@@ -106,7 +107,7 @@ if __name__ == '__main__':
                 for idx, (l1, l2) in enumerate(zip(l1s, l2s)):
                     loss_l1 = tf.nn.l2_loss(tf.concat(l1, axis=0) - q_vect_split[gpu_id], name='loss_l1_stage%d_tower%d' % (idx, gpu_id))
                     loss_l2 = tf.nn.l2_loss(tf.concat(l2, axis=0) - q_heat_split[gpu_id], name='loss_l2_stage%d_tower%d' % (idx, gpu_id))
-                    losses.append(tf.reduce_mean([loss_l1, loss_l2]))
+                    losses.append(tf.reduce_mean(input_tensor=[loss_l1, loss_l2]))
 
                 last_losses_l1.append(loss_l1)
                 last_losses_l2.append(loss_l2)
@@ -115,53 +116,53 @@ if __name__ == '__main__':
 
     with tf.device(tf.DeviceSpec(device_type="GPU", device_index=gpu_id)):
         # define loss
-        total_loss = tf.reduce_sum(losses) / args.batchsize
-        total_loss_ll_paf = tf.reduce_sum(last_losses_l1) / args.batchsize
-        total_loss_ll_heat = tf.reduce_sum(last_losses_l2) / args.batchsize
-        total_loss_ll = tf.reduce_mean([total_loss_ll_paf, total_loss_ll_heat])
+        total_loss = tf.reduce_sum(input_tensor=losses) / args.batchsize
+        total_loss_ll_paf = tf.reduce_sum(input_tensor=last_losses_l1) / args.batchsize
+        total_loss_ll_heat = tf.reduce_sum(input_tensor=last_losses_l2) / args.batchsize
+        total_loss_ll = tf.reduce_mean(input_tensor=[total_loss_ll_paf, total_loss_ll_heat])
 
         # define optimizer
         step_per_epoch = 121745 // args.batchsize
         global_step = tf.Variable(0, trainable=False)
         if ',' not in args.lr:
             starter_learning_rate = float(args.lr)
-            learning_rate = tf.train.exponential_decay(starter_learning_rate, global_step,
+            learning_rate = tf.compat.v1.train.exponential_decay(starter_learning_rate, global_step,
                                                        decay_steps=10000, decay_rate=0.33, staircase=True)
         else:
             lrs = [float(x) for x in args.lr.split(',')]
             boundaries = [step_per_epoch * 5 * i for i, _ in range(len(lrs)) if i > 0]
-            learning_rate = tf.train.piecewise_constant(global_step, boundaries, lrs)
+            learning_rate = tf.compat.v1.train.piecewise_constant(global_step, boundaries, lrs)
 
     # optimizer = tf.train.RMSPropOptimizer(learning_rate, decay=0.0005, momentum=0.9, epsilon=1e-10)
-    optimizer = tf.train.AdamOptimizer(learning_rate, epsilon=1e-8)
-    update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+    optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate, epsilon=1e-8)
+    update_ops = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.UPDATE_OPS)
     with tf.control_dependencies(update_ops):
-        train_op = optimizer.minimize(total_loss, global_step, colocate_gradients_with_ops=True)
+        train_op = optimizer.minimize(total_loss, global_step)
     logger.info('define model-')
 
     # define summary
-    tf.summary.scalar("loss", total_loss)
-    tf.summary.scalar("loss_lastlayer", total_loss_ll)
-    tf.summary.scalar("loss_lastlayer_paf", total_loss_ll_paf)
-    tf.summary.scalar("loss_lastlayer_heat", total_loss_ll_heat)
-    tf.summary.scalar("queue_size", enqueuer.size())
-    merged_summary_op = tf.summary.merge_all()
+    tf.compat.v1.summary.scalar("loss", total_loss)
+    tf.compat.v1.summary.scalar("loss_lastlayer", total_loss_ll)
+    tf.compat.v1.summary.scalar("loss_lastlayer_paf", total_loss_ll_paf)
+    tf.compat.v1.summary.scalar("loss_lastlayer_heat", total_loss_ll_heat)
+    tf.compat.v1.summary.scalar("queue_size", enqueuer.size())
+    merged_summary_op = tf.compat.v1.summary.merge_all()
 
-    valid_loss = tf.placeholder(tf.float32, shape=[])
-    valid_loss_ll = tf.placeholder(tf.float32, shape=[])
-    valid_loss_ll_paf = tf.placeholder(tf.float32, shape=[])
-    valid_loss_ll_heat = tf.placeholder(tf.float32, shape=[])
-    sample_train = tf.placeholder(tf.float32, shape=(4, 640, 640, 3))
-    sample_valid = tf.placeholder(tf.float32, shape=(12, 640, 640, 3))
-    train_img = tf.summary.image('training sample', sample_train, 4)
-    valid_img = tf.summary.image('validation sample', sample_valid, 12)
-    valid_loss_t = tf.summary.scalar("loss_valid", valid_loss)
-    valid_loss_ll_t = tf.summary.scalar("loss_valid_lastlayer", valid_loss_ll)
-    merged_validate_op = tf.summary.merge([train_img, valid_img, valid_loss_t, valid_loss_ll_t])
+    valid_loss = tf.compat.v1.placeholder(tf.float32, shape=[])
+    valid_loss_ll = tf.compat.v1.placeholder(tf.float32, shape=[])
+    valid_loss_ll_paf = tf.compat.v1.placeholder(tf.float32, shape=[])
+    valid_loss_ll_heat = tf.compat.v1.placeholder(tf.float32, shape=[])
+    sample_train = tf.compat.v1.placeholder(tf.float32, shape=(4, 640, 640, 3))
+    sample_valid = tf.compat.v1.placeholder(tf.float32, shape=(12, 640, 640, 3))
+    train_img = tf.compat.v1.summary.image('training sample', sample_train, 4)
+    valid_img = tf.compat.v1.summary.image('validation sample', sample_valid, 12)
+    valid_loss_t = tf.compat.v1.summary.scalar("loss_valid", valid_loss)
+    valid_loss_ll_t = tf.compat.v1.summary.scalar("loss_valid_lastlayer", valid_loss_ll)
+    merged_validate_op = tf.compat.v1.summary.merge([train_img, valid_img, valid_loss_t, valid_loss_ll_t])
 
-    saver = tf.train.Saver(max_to_keep=100)
-    config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=False)
-    with tf.Session(config=config) as sess:
+    saver = tf.compat.v1.train.Saver(max_to_keep=100)
+    config = tf.compat.v1.ConfigProto(allow_soft_placement=True, log_device_placement=False)
+    with tf.compat.v1.Session(config=config) as sess:
         training_name = '{}_batch:{}_lr:{}_gpus:{}_{}x{}_{}'.format(
             args.model,
             args.batchsize,
@@ -171,7 +172,7 @@ if __name__ == '__main__':
             args.tag
         )
         logger.info('model weights initialization')
-        sess.run(tf.global_variables_initializer())
+        sess.run(tf.compat.v1.global_variables_initializer())
 
         if args.checkpoint:
             logger.info('Restore from checkpoint...')
@@ -182,14 +183,14 @@ if __name__ == '__main__':
         elif pretrain_path:
             logger.info('Restore pretrained weights...')
             if '.ckpt' in pretrain_path:
-                loader = tf.train.Saver(net.restorable_variables())
+                loader = tf.compat.v1.train.Saver(net.restorable_variables())
                 loader.restore(sess, pretrain_path)
             elif '.npy' in pretrain_path:
                 net.load(pretrain_path, sess, False)
             logger.info('Restore pretrained weights...Done')
 
         logger.info('prepare file writer')
-        file_writer = tf.summary.FileWriter(args.logpath + training_name, sess.graph)
+        file_writer = tf.compat.v1.summary.FileWriter(args.logpath + training_name, sess.graph)
 
         logger.info('prepare coordinator')
         coord = tf.train.Coordinator()

@@ -12,6 +12,7 @@ To train an acition classification model (CNN + LSTM)
 """
 
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
@@ -76,7 +77,7 @@ def lstm_layer(lstm_size, num_layers, batch_size, dropout_rate=None):
 
   cell = tf.contrib.rnn.MultiRNNCell([cell(lstm_size, dropout_rate) for _ in range(num_layers)])
   """
-  cell = tf.contrib.rnn.BasicLSTMCell(lstm_size)
+  cell = tf.compat.v1.nn.rnn_cell.BasicLSTMCell(lstm_size)
   init_state = cell.zero_state(batch_size, tf.float32)
 
   return cell, init_state
@@ -98,7 +99,7 @@ def flatten(layer, batch_size, time_step):
 create DENSE layer
 """
 def dense_layer(inputs, in_size, out_size, dropout=False, activation=tf.nn.relu):
-  weights = tf.Variable(tf.random_normal([in_size, out_size], stddev=0.05))
+  weights = tf.Variable(tf.random.normal([in_size, out_size], stddev=0.05))
   bias = tf.Variable(tf.zeros(out_size))
 
   inputs = tf.reshape(inputs, [-1, in_size])
@@ -108,7 +109,7 @@ def dense_layer(inputs, in_size, out_size, dropout=False, activation=tf.nn.relu)
     layer = activation(layer)
 
   if dropout:
-    layer = tf.nn.dropout(layer, 0.5)
+    layer = tf.nn.dropout(layer, rate=1 - (0.5))
 
   return layer
 
@@ -124,9 +125,9 @@ Softmax cross entropy loss function
 """
 def compute_loss(loss, predict, labels):
   if loss == "xentropy":
-    cross_entropy = -tf.reduce_sum(tf.multiply(labels * tf.log(predict), 1),
-                  reduction_indices=[1])
-    loss_output = tf.reduce_mean(cross_entropy, name='xentropy_mean')
+    cross_entropy = -tf.reduce_sum(input_tensor=tf.multiply(labels * tf.math.log(predict), 1),
+                  axis=[1])
+    loss_output = tf.reduce_mean(input_tensor=cross_entropy, name='xentropy_mean')
 
   return loss_output
 
@@ -144,7 +145,7 @@ def loss_optimizer(predict, labels, opt):
   # get optimizer
   if opt["name"] == "adam":
     #optimizer = tf.train.AdamOptimizer(learning_rate=opt["learning_rate"]).minimize(loss)
-    optimizer = tf.train.AdamOptimizer(learning_rate=learn_rate).minimize(loss)
+    optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=learn_rate).minimize(loss)
 
   return loss, optimizer
 
@@ -153,11 +154,11 @@ def loss_optimizer(predict, labels, opt):
 config settings
 """
 # define some options for the session/run
-sess_config = tf.ConfigProto()
+sess_config = tf.compat.v1.ConfigProto()
 sess_config.gpu_options.allow_growth = True
 #sess_config.gpu_options.per_process_gpu_memory_fraction = 0.98
 
-run_opts = tf.RunOptions(report_tensor_allocations_upon_oom = True)
+run_opts = tf.compat.v1.RunOptions(report_tensor_allocations_upon_oom = True)
 
 """
 dataset specification
@@ -187,14 +188,14 @@ scales = [None]
 model = 'mobilenet_thin'
 
 graph_path = get_graph_path(model)
-graph_def = tf.GraphDef()
-with tf.gfile.GFile(graph_path, 'rb') as f:
+graph_def = tf.compat.v1.GraphDef()
+with tf.io.gfile.GFile(graph_path, 'rb') as f:
   graph_def.ParseFromString(f.read())
 
-cnn_graph = tf.get_default_graph()
+cnn_graph = tf.compat.v1.get_default_graph()
 tf.import_graph_def(graph_def, name="TfPoseEstimator")
 # pose_cnn = TfPoseEstimator(get_graph_path(model), target_size=(w, h))
-cnn_sess = tf.Session(graph=cnn_graph, config=sess_config)
+cnn_sess = tf.compat.v1.Session(graph=cnn_graph, config=sess_config)
 
 cnn_input = cnn_graph.get_tensor_by_name('TfPoseEstimator/image:0')
 cnn_output = cnn_graph.get_tensor_by_name('TfPoseEstimator/Openpose/concat_stage7:0')
@@ -236,20 +237,20 @@ lstm_input_size = 60 * 60 * 57
 # placeholder for input
 # TODO: change the input size
 # [batch_size, max_timestep, feature dims]
-lstm_input = tf.placeholder(tf.float32, [batch_size, 60, 60, 57], name="lstm_input")
-lstm_label = tf.placeholder(tf.float32, [batch_size, gesture_size], name="target_action")
+lstm_input = tf.compat.v1.placeholder(tf.float32, [batch_size, 60, 60, 57], name="lstm_input")
+lstm_label = tf.compat.v1.placeholder(tf.float32, [batch_size, gesture_size], name="target_action")
 
 # human = tf.placeholder(tf_openpose.src.estimator.Human, [batch_size, 1])
 # placeholder for ground-truth
-initializer = tf.random_uniform_initializer(-1, 1)
-lstm_cell = tf.nn.rnn_cell.LSTMCell(lstm_size, lstm_input_size, initializer=initializer)
+initializer = tf.compat.v1.random_uniform_initializer(-1, 1)
+lstm_cell = tf.compat.v1.nn.rnn_cell.LSTMCell(lstm_size, lstm_input_size, initializer=initializer)
 # init_state = cell.zero_state(batch_size, tf.float32)
 
 # cell_out : [batch_size, max_time, cell.output_size]
 # cell_out = tf.nn.rnn_cell.OutputProjectionWrapper(cell, gesture_size)
 cell_input = tf.reshape(lstm_input, [batch_size, max_timestep, -1])
 
-outputs, states = tf.nn.dynamic_rnn(lstm_cell, cell_input, dtype=tf.float32)
+outputs, states = tf.compat.v1.nn.dynamic_rnn(lstm_cell, cell_input, dtype=tf.float32)
 
 logits = dense_layer(outputs, lstm_size, gesture_size, activation=None)
 
@@ -271,11 +272,11 @@ loss, opt = loss_optimizer(prediction, lstm_label, opt)
 print("Training with data from " + os.path.join(os.path.dirname(os.getcwd()),"datasets"))
 
 # get Saver to save the model
-saver = tf.train.Saver()
+saver = tf.compat.v1.train.Saver()
 
 #Prefer a managed context...
-lstm_sess = tf.Session(config=sess_config)
-lstm_sess.run(tf.global_variables_initializer(), options = run_opts)
+lstm_sess = tf.compat.v1.Session(config=sess_config)
+lstm_sess.run(tf.compat.v1.global_variables_initializer(), options = run_opts)
 
 
 # initial state of the LSTM memory
@@ -424,4 +425,3 @@ probabilities.append(tf.nn.softmax(logits))
 loss += compute_cross_entropy_loss(softmax, labels, head)
 """
 
-  

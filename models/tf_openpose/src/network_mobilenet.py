@@ -1,4 +1,5 @@
 import tensorflow as tf
+tf.compat.v1.disable_eager_execution()
 
 from tf_openpose.src import network_base
 
@@ -15,7 +16,7 @@ class MobilenetNetwork(network_base.BaseNetwork):
         depth = lambda d: max(int(d * self.conv_width), min_depth)
         depth2 = lambda d: max(int(d * self.conv_width2), min_depth)
 
-        with tf.variable_scope(None, 'MobilenetV1'):
+        with tf.compat.v1.variable_scope(None, 'MobilenetV1'):
             (self.feed('image')
              .convb(3, 3, depth(32), 2, name='Conv2d_0')
              .separable_conv(3, 3, depth(64), 1, name='Conv2d_1')
@@ -40,7 +41,7 @@ class MobilenetNetwork(network_base.BaseNetwork):
             .concat(3, name='feat_concat'))
 
         feature_lv = 'feat_concat'
-        with tf.variable_scope(None, 'Openpose'):
+        with tf.compat.v1.variable_scope(None, 'Openpose'):
             prefix = 'MConv_Stage1'
             (self.feed(feature_lv)
              .separable_conv(3, 3, depth2(128), 1, name=prefix + '_L1_1')
@@ -97,7 +98,7 @@ class MobilenetNetwork(network_base.BaseNetwork):
                self.get_output('MConv_Stage%d_L2_5' % self.get_refine_num())
 
     def restorable_variables(self):
-        vs = {v.op.name: v for v in tf.global_variables() if
+        vs = {v.op.name: v for v in tf.compat.v1.global_variables() if
               'MobilenetV1/Conv2d' in v.op.name and
               'RMSProp' not in v.op.name and 'Momentum' not in v.op.name and 'Ada' not in v.op.name
               }

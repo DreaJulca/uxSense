@@ -1,0 +1,5 @@
+Process start : Tue Feb  1 16:29:06 2022 
+Video path is: C:\Users\andre\documents\github\uxsense/assets/sampleytsmall.mp4
+Video times and rates:
+  Duration: 00:03:12.15, start: 0.000000, bitrate: 1959 kb/s
+End : Tue Feb  1 16:29:06 2022
