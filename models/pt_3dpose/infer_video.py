@@ -17,9 +17,10 @@ def get_resolution(filename):
     command = ['ffprobe', '-v', 'error', '-select_streams', 'v:0',
                '-show_entries', 'stream=width,height', '-of', 'csv=p=0', filename]
     pipe = sp.Popen(command, stdout=sp.PIPE, bufsize=-1)
-    for line in pipe.stdout:
-        w, h = line.decode().strip().split(',')
-        return int(w), int(h)
+    while True:
+        for line in pipe.stdout:
+            w, h = line.decode().strip().split(',')
+            return int(w), int(h)
 
 def read_video(filename):
     w, h = get_resolution(filename)
@@ -32,6 +33,7 @@ def read_video(filename):
             '-vcodec', 'rawvideo', '-']
 
     pipe = sp.Popen(command, stdout=sp.PIPE, bufsize=-1)
+    time.sleep(10)
     while True:
         data = pipe.stdout.read(w*h*3)
         if not data:
@@ -45,7 +47,7 @@ def main(args):
     merge_cfg_from_file(args.cfg)
     cfg.NUM_GPUS = 1
     args.weights = cache_url(args.weights, cfg.DOWNLOAD_CACHE)
-    assert_and_infer_cfg(cache_urls=False)
+    assert_and_infer_cfg(cache_urls=False, make_immutable=False)
     model = infer_engine.initialize_model_from_cfg(args.weights)
     dummy_coco_dataset = dummy_datasets.get_coco_dataset()
 
@@ -71,6 +73,7 @@ def main(args):
             logger.info('Frame {}'.format(frame_i))
             timers = defaultdict(Timer)
             t = time.time()
+            #try:
             with c2_utils.NamedCudaScope(0):
                 cls_boxes, cls_segms, cls_keyps = infer_engine.im_detect_all(
                     model, im, None, timers=timers
@@ -82,7 +85,8 @@ def main(args):
             boxes.append(cls_boxes)
             segments.append(cls_segms)
             keypoints.append(cls_keyps)
-
+            #except:
+            #    print(f"Warning: c2_utils.NamedCudaScope failed for frame {frame_i}")
         
         # Video resolution
         metadata = {

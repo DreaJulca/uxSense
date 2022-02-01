@@ -29,7 +29,6 @@ _CMAKE_INSTALL_PREFIX = '/usr/local'
 # Detectron ops lib
 _DETECTRON_OPS_LIB = 'caffe2_detectron_ops_gpu.dll'
 
-
 def get_runtime_dir():
     """Retrieve the path to the runtime directory."""
     return sys.path[0]
@@ -64,12 +63,11 @@ def get_detectron_ops_lib():
     # Candidate prefixes for detectron ops lib path
     prefixes = [_CMAKE_INSTALL_PREFIX, sys.prefix, sys.exec_prefix] + sys.path
     # Candidate subdirs for detectron ops lib
-    subdirs = ['lib', 'torch/lib', 'Lib/site-packages/torch/lib']
+    subdirs = ['lib', 'torch/lib']
     # Try to find detectron ops lib
     for prefix in prefixes:
         for subdir in subdirs:
             ops_path = os.path.join(prefix, subdir, _DETECTRON_OPS_LIB)
-            print(ops_path)
             if os.path.exists(ops_path):
                 print('Found Detectron ops lib: {}'.format(ops_path))
                 return ops_path
@@ -81,7 +79,7 @@ def get_custom_ops_lib():
     det_dir, _ = os.path.split(os.path.dirname(__file__))
     root_dir, _ = os.path.split(det_dir)
     custom_ops_lib = os.path.join(
-        root_dir, 'build/caffe2_detectron_custom_ops_gpu.so')
+        root_dir, 'build/libcaffe2_detectron_custom_ops_gpu.so')
     assert os.path.exists(custom_ops_lib), \
         'Custom ops lib not found at \'{}\''.format(custom_ops_lib)
     return custom_ops_lib
