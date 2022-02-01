@@ -61,7 +61,8 @@ class BatchPermutationOpTest(unittest.TestCase):
         """
         net = core.Net('test')
         net.Proto().type = 'prof_dag'
-        net.Proto().num_workers = 2
+        #net.Proto().num_workers = 2
+        net.Proto().num_workers = 0
         Y = net.BatchPermutation(['X', 'I'], 'Y')
         Y_flat = net.FlattenToVec([Y], 'Y_flat')
         loss = net.AveragedLoss([Y_flat], 'loss')

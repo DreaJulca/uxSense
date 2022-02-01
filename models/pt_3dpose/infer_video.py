@@ -12,6 +12,7 @@
 from detectron.infer_simple import *
 import subprocess as sp
 import numpy as np
+import cv2
 
 def get_resolution(filename):
     command = ['ffprobe', '-v', 'error', '-select_streams', 'v:0',
@@ -23,8 +24,11 @@ def get_resolution(filename):
             return int(w), int(h)
 
 def read_video(filename):
-    w, h = get_resolution(filename)
-
+    ow, oh = get_resolution(filename)
+    ow = int(ow)
+    oh = int(oh)
+    #w, h = 432, 368
+    #dim = (w, h)
     command = ['ffmpeg',
             '-i', filename,
             '-f', 'image2pipe',
@@ -33,12 +37,13 @@ def read_video(filename):
             '-vcodec', 'rawvideo', '-']
 
     pipe = sp.Popen(command, stdout=sp.PIPE, bufsize=-1)
-    time.sleep(10)
+    #time.sleep(10)
     while True:
-        data = pipe.stdout.read(w*h*3)
+        data = pipe.stdout.read(ow*oh*3)
         if not data:
             break
-        yield np.frombuffer(data, dtype='uint8').reshape((h, w, 3))
+        #yield cv2.resize(np.frombuffer(data, dtype=np.uint8), dim)
+        yield np.frombuffer(data, dtype=np.uint8).reshape(ow, oh, 3)
 
 
 def main(args):
@@ -49,7 +54,7 @@ def main(args):
     args.weights = cache_url(args.weights, cfg.DOWNLOAD_CACHE)
     assert_and_infer_cfg(cache_urls=False, make_immutable=False)
     model = infer_engine.initialize_model_from_cfg(args.weights)
-    dummy_coco_dataset = dummy_datasets.get_coco_dataset()
+    #dummy_coco_dataset = dummy_datasets.get_coco_dataset()
 
 
 
@@ -73,20 +78,22 @@ def main(args):
             logger.info('Frame {}'.format(frame_i))
             timers = defaultdict(Timer)
             t = time.time()
-            #try:
-            with c2_utils.NamedCudaScope(0):
-                cls_boxes, cls_segms, cls_keyps = infer_engine.im_detect_all(
-                    model, im, None, timers=timers
-                )
-            logger.info('Inference time: {:.3f}s'.format(time.time() - t))
-            for k, v in timers.items():
-                logger.info(' | {}: {:.3f}s'.format(k, v.average_time))
+            try:
+                with c2_utils.NamedCudaScope(0):
+                    #print(np.uint8(im))
+                    cls_boxes, cls_segms, cls_keyps = infer_engine.im_detect_all(
+                        model, im, None, timers=timers
+                    )
+                logger.info('Inference time: {:.3f}s'.format(time.time() - t))
+                for k, v in timers.items():
+                    logger.info(' | {}: {:.3f}s'.format(k, v.average_time))
 
-            boxes.append(cls_boxes)
-            segments.append(cls_segms)
-            keypoints.append(cls_keyps)
-            #except:
-            #    print(f"Warning: c2_utils.NamedCudaScope failed for frame {frame_i}")
+                boxes.append(cls_boxes)
+                segments.append(cls_segms)
+                keypoints.append(cls_keyps)
+            except BaseException as err:
+                print(f"Warning: c2_utils.NamedCudaScope failed for frame {frame_i}")
+                print(f"Unexpected {err=}, {type(err)=}")
         
         # Video resolution
         metadata = {

@@ -658,7 +658,8 @@ def main():
     net.Proto().external_input.extend(copy.deepcopy(model.net.Proto().external_input))
     net.Proto().external_output.extend(copy.deepcopy(model.net.Proto().external_output))
     net.Proto().type = args.net_execution_type
-    net.Proto().num_workers = 1 if args.net_execution_type == "simple" else 4
+    #net.Proto().num_workers = 1 if args.net_execution_type == "simple" else 4
+    net.Proto().num_workers = 0
 
     # Reset the device_option, change to unscope name and replace python operators
     convert_net(args, net.Proto(), blobs)
