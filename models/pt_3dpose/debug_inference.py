@@ -29,7 +29,8 @@ def main(args):
         clmta = json.load(clmtafile)
 
         np.savez_compressed(out_name, boxes=clbox, segments=clseg, keypoints=clkey, metadata=clmta)
-
+        b = np.load(out_name+'.npz')
+        print(b)
 
 if __name__ == '__main__':
     workspace.GlobalInit(['caffe2', '--caffe2_log_level=0'])

@@ -89,6 +89,8 @@ def main(args):
 
         for frame_i, im in enumerate(read_video(video_name)):
 
+            #print(im)
+
             logger.info('Frame {}'.format(frame_i))
             timers = defaultdict(Timer)
             t = time.time()
@@ -101,6 +103,11 @@ def main(args):
                 logger.info('Inference time: {:.3f}s'.format(time.time() - t))
                 for k, v in timers.items():
                     logger.info(' | {}: {:.3f}s'.format(k, v.average_time))
+
+                #print(cls_boxes)
+                #print(cls_segms)
+                #print(cls_keyps)
+
 
                 boxes.append(cls_boxes)
                 segments.append(cls_segms)
@@ -134,8 +141,21 @@ def main(args):
         with open(out_name.replace(".mp4", "cls_metad.json"), "w") as f:
             f.write(clmta + '\n')
 
-        #np.savez_compressed(out_name, boxes=boxes, segments=segments, keypoints=keypoints, metadata=metadata)
-        np.savez_compressed(out_name, boxes=clbox, segments=clseg, keypoints=clkey, metadata=clmta)
+        np.savez_compressed(out_name, boxes=boxes, segments=segments, keypoints=keypoints, metadata=metadata)
+
+        clboxfile = open(out_name.replace(".mp4", "cls_boxes.json"), "r")        
+        clbox = json.load(clboxfile)
+
+        clsegfile = open(out_name.replace(".mp4", "cls_segms.json"), "r")
+        clseg = json.load(clsegfile)
+        
+        clkeyfile = open(out_name.replace(".mp4", "cls_keyps.json"), "r")
+        clkey = json.load(clkeyfile)
+
+        clmtafile = open(out_name.replace(".mp4", "cls_metad.json"), "r")
+        clmta = json.load(clmtafile)
+
+        np.savez_compressed('alt'+out_name, boxes=clbox, segments=clseg, keypoints=clkey, metadata=clmta)
 
 
 if __name__ == '__main__':
