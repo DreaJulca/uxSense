@@ -13,6 +13,7 @@ from detectron.infer_simple import *
 import subprocess as sp
 import numpy as np
 import json
+import cv2
 
 class NumpyEncoder(json.JSONEncoder):
     """ Special json encoder for numpy types """
@@ -39,8 +40,8 @@ def get_resolution(filename):
 
 def read_video(filename):
     ow, oh = get_resolution(filename)
-    ow = int(ow)
-    oh = int(oh)
+    #ow = int(ow)
+    #oh = int(oh)
     #w, h = 432, 368
     #dim = (w, h)
     command = ['ffmpeg',
@@ -57,11 +58,10 @@ def read_video(filename):
         if not data:
             break
         #yield cv2.resize(np.frombuffer(data, dtype=np.uint8), dim)
-        yield np.frombuffer(data, dtype=np.uint8).reshape(ow, oh, 3)
+        yield np.frombuffer(data, dtype='uint8').reshape(oh, ow, 3)
 
 
 def main(args):
-
     logger = logging.getLogger(__name__)
     merge_cfg_from_file(args.cfg)
     cfg.NUM_GPUS = 1
@@ -88,9 +88,12 @@ def main(args):
         keypoints = []
 
         for frame_i, im in enumerate(read_video(video_name)):
-
+            #w, h = 432, 368
+            #dim = (w, h)
             #print(im)
-
+            #img = cv2.resize(im , dim, interpolation = cv2.INTER_AREA)
+            print(im.shape)
+            
             logger.info('Frame {}'.format(frame_i))
             timers = defaultdict(Timer)
             t = time.time()
