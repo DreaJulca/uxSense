@@ -12,7 +12,21 @@
 from detectron.infer_simple import *
 import subprocess as sp
 import numpy as np
-import cv2
+import json
+
+class NumpyEncoder(json.JSONEncoder):
+    """ Special json encoder for numpy types """
+    def default(self, obj):
+        if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
+                            np.int16, np.int32, np.int64, np.uint8,
+                            np.uint16, np.uint32, np.uint64)):
+            return int(obj)
+        elif isinstance(obj, (np.float_, np.float16, np.float32,
+                              np.float64)):
+            return float(obj)
+        elif isinstance(obj, (np.ndarray,)):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 def get_resolution(filename):
     command = ['ffprobe', '-v', 'error', '-select_streams', 'v:0',
@@ -91,6 +105,7 @@ def main(args):
                 boxes.append(cls_boxes)
                 segments.append(cls_segms)
                 keypoints.append(cls_keyps)
+
             except BaseException as err:
                 print(f"Warning: c2_utils.NamedCudaScope failed for frame {frame_i}")
                 print(f"Unexpected {err=}, {type(err)=}")
@@ -100,8 +115,27 @@ def main(args):
             'w': im.shape[1],
             'h': im.shape[0],
         }
+
+        clbox = json.dumps(boxes, cls=NumpyEncoder)
+        clseg = json.dumps(segments, cls=NumpyEncoder)
+        clkey = json.dumps(keypoints, cls=NumpyEncoder)
+        clmta = json.dumps(metadata, cls=NumpyEncoder)
+
+        #TODO: Debug then remove this.
+        with open(out_name.replace(".mp4", "cls_boxes.json"), "w") as f:
+            f.write(clbox + '\n')
+
+        with open(out_name.replace(".mp4", "cls_segms.json"), "w") as f:
+            f.write(clseg + '\n')
         
-        np.savez_compressed(out_name, boxes=boxes, segments=segments, keypoints=keypoints, metadata=metadata)
+        with open(out_name.replace(".mp4", "cls_keyps.json"), "w") as f:
+            f.write(clkey + '\n')
+
+        with open(out_name.replace(".mp4", "cls_metad.json"), "w") as f:
+            f.write(clmta + '\n')
+
+        #np.savez_compressed(out_name, boxes=boxes, segments=segments, keypoints=keypoints, metadata=metadata)
+        np.savez_compressed(out_name, boxes=clbox, segments=clseg, keypoints=clkey, metadata=clmta)
 
 
 if __name__ == '__main__':
